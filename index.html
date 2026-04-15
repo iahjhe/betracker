@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Iahjhe BetVault • Dashboard • Withdrawals & Notes</title>
+  <title>Pro Bet Admin • Advanced Reporting & Financial Tracker</title>
   <!-- Font & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -55,6 +55,7 @@
       align-items: center;
       gap: 24px;
       border: 1px solid #e9eef3;
+      flex-wrap: wrap;
     }
     .bankroll-item {
       display: flex;
@@ -72,7 +73,7 @@
     .profit-positive { color: #10b981; }
     .profit-negative { color: #ef4444; }
 
-    /* stats grid */
+    /* stats grid - expanded */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4,1fr);
@@ -103,6 +104,35 @@
       font-size: 0.9rem;
       margin-top: 6px;
     }
+
+    /* Reporting summary cards (extra row) */
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    .report-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border-radius: 20px;
+      padding: 18px 20px;
+      border-left: 4px solid;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    }
+    .report-card h4 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: #64748b;
+      margin-bottom: 8px;
+    }
+    .report-card .value {
+      font-size: 1.7rem;
+      font-weight: 700;
+    }
+    .loss-card { border-left-color: #ef4444; }
+    .bet-card { border-left-color: #3b82f6; }
+    .stake-card { border-left-color: #8b5cf6; }
+    .net-card { border-left-color: #10b981; }
 
     /* 2-col layout */
     .two-col {
@@ -379,15 +409,13 @@
       font-size: 0.85rem;
       z-index: 1000;
     }
-    .status-online { color: #10b981; }
-    .status-offline { color: #ef4444; }
   </style>
 </head>
 <body>
 <div class="dashboard">
   <!-- HEADER -->
   <div class="header">
-    <h1><i class="fas fa-chart-pie" style="margin-right: 12px; color: #3b82f6;"></i>BetVault Admin</h1>
+    <h1><i class="fas fa-chart-pie" style="margin-right: 12px; color: #3b82f6;"></i>IahJhe BetVault</h1>
     <div class="bankroll-card">
       <div class="bankroll-item">
         <span class="bankroll-label"><i class="fas fa-coins"></i> Current</span>
@@ -400,7 +428,7 @@
     </div>
   </div>
 
-  <!-- STATS CARDS -->
+  <!-- STATS CARDS (Win rate, total bets, profit, ROI) -->
   <div class="stats-grid">
     <div class="stat-card">
       <div class="stat-label">📋 Total Bets</div>
@@ -418,6 +446,29 @@
       <div class="stat-label">📈 ROI</div>
       <div class="stat-number" id="roiValue">0%</div>
       <div class="stat-sub">on turnover</div>
+    </div>
+  </div>
+
+  <!-- NEW REPORTING ROW: Total amount staked, Bets lost, Money lost from losses, Net impact -->
+  <div class="report-grid">
+    <div class="report-card bet-card">
+      <h4><i class="fas fa-dollar-sign"></i> Total Staked (Turnover)</h4>
+      <div class="value" id="totalStakedReport">0.00</div>
+    </div>
+    <div class="report-card loss-card">
+      <h4><i class="fas fa-frown"></i> Bets Lost</h4>
+      <div class="value" id="totalLostBets">0</div>
+      <small>count of losing bets</small>
+    </div>
+    <div class="report-card loss-card">
+      <h4><i class="fas fa-minus-circle"></i> Money Lost (from Losses)</h4>
+      <div class="value" id="moneyLostFromLosses">0.00</div>
+      <small>total stake of lost bets</small>
+    </div>
+    <div class="report-card net-card">
+      <h4><i class="fas fa-chart-line"></i> Net Bankroll Change</h4>
+      <div class="value" id="netBankrollChange">0.00</div>
+      <small>starting + P/L - withdrawals</small>
     </div>
   </div>
 
@@ -456,7 +507,7 @@
         <button class="btn-primary" id="logBetBtn"><i class="fas fa-save"></i> <span id="submitBtnText">Log Bet & Update</span></button>
       </div>
 
-      <!-- NEW: WITHDRAWAL & NOTES SECTION -->
+      <!-- WITHDRAWAL & NOTES SECTION -->
       <div class="withdraw-section" style="margin-top: 16px;">
         <h3 style="font-size: 1.1rem; margin-bottom: 12px;"><i class="fas fa-hand-holding-usd"></i> Withdraw Funds & Usage Note</h3>
         <div class="withdraw-flex">
@@ -480,15 +531,12 @@
           </div>
           <button id="withdrawBtn" class="btn-withdraw"><i class="fas fa-arrow-down"></i> Withdraw</button>
         </div>
-        <!-- Recent withdrawal notes history -->
         <div style="margin-top: 14px;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
             <span style="font-weight: 600; font-size: 0.8rem;">📋 Recent withdrawal notes</span>
             <button id="clearNotesHistory" style="background:none; border:none; color:#94a3b8; font-size:0.7rem; cursor:pointer;">clear all</button>
           </div>
-          <div id="withdrawalNotesList" class="note-history">
-            <div class="note-item" style="color:#94a3b8;">No withdrawals yet</div>
-          </div>
+          <div id="withdrawalNotesList" class="note-history"><div class="note-item" style="color:#94a3b8;">No withdrawals yet</div></div>
         </div>
       </div>
     </div>
@@ -527,10 +575,10 @@
   </div>
 </div>
 
-<div class="connection-status" id="connectionStatus"><i class="fas fa-circle"></i> <span>Online</span></div>
+<div class="connection-status" id="connectionStatus"><i class="fas fa-circle status-online"></i> <span>Online</span></div>
 
 <script>
-  // Firebase config
+  // Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyAWLMR5FrnKVGkJ3OGhYOHlPZPAx5liACU",
     authDomain: "iahjhe-betracker.firebaseapp.com",
@@ -543,12 +591,11 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
   db.settings({ cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED });
-  db.enablePersistence().catch(()=>console.log("persistence limited"));
+  db.enablePersistence().catch(()=>console.log("persistence note"));
 
-  // GLOBAL STATE
   let bets = [];
   let startingBankroll = 1000.00;
-  let withdrawals = []; // array of {amount, category, note, date, totalAfter}
+  let withdrawals = [];
   let currentSort = { field: 'date', asc: false };
   let editingBetId = null;
 
@@ -584,58 +631,86 @@
   const withdrawalNotesList = document.getElementById('withdrawalNotesList');
   const clearNotesHistory = document.getElementById('clearNotesHistory');
 
+  // Reporting elements
+  const totalStakedReport = document.getElementById('totalStakedReport');
+  const totalLostBets = document.getElementById('totalLostBets');
+  const moneyLostFromLosses = document.getElementById('moneyLostFromLosses');
+  const netBankrollChange = document.getElementById('netBankrollChange');
+
   const today = new Date().toISOString().split('T')[0];
   betDate.value = today;
   startingBankrollInput.value = startingBankroll;
 
-  // Helper: compute total profit from bets
+  // Helper functions for detailed reporting
   function totalProfitFromBets() {
     return bets.reduce((sum, b) => sum + (b.profitLoss || 0), 0);
   }
-
-  // total withdrawn sum
+  function totalStakeAmount() {
+    return bets.reduce((sum, b) => sum + (b.stake || 0), 0);
+  }
+  function countLostBets() {
+    return bets.filter(b => b.result === 'Loss').length;
+  }
+  function totalMoneyLostFromLosses() {
+    return bets.filter(b => b.result === 'Loss').reduce((sum, b) => sum + (b.stake || 0), 0);
+  }
   function totalWithdrawnAmount() {
     return withdrawals.reduce((sum, w) => sum + w.amount, 0);
   }
-
-  // effective net bankroll = startingBankroll + totalProfitFromBets() - totalWithdrawn
   function getEffectiveBankroll() {
     return startingBankroll + totalProfitFromBets() - totalWithdrawnAmount();
   }
 
-  function computeStats() {
+  function computeFullReport() {
     const totalBetsCount = bets.length;
     const wins = bets.filter(b => b.result === 'Win').length;
     const losses = bets.filter(b => b.result === 'Loss').length;
     const pending = bets.filter(b => b.result === 'Pending').length;
-    const winRate = (wins + losses) > 0 ? (wins / (wins + losses)) * 100 : 0;
+    const winRateVal = (wins + losses) > 0 ? (wins / (wins + losses)) * 100 : 0;
     const totalProfitVal = totalProfitFromBets();
-    const totalStake = bets.reduce((sum, b) => sum + (b.stake || 0), 0);
-    const roi = totalStake > 0 ? (totalProfitVal / totalStake) * 100 : 0;
+    const totalStakeVal = totalStakeAmount();
+    const roi = totalStakeVal > 0 ? (totalProfitVal / totalStakeVal) * 100 : 0;
     const currentBank = getEffectiveBankroll();
-    return { totalBets: totalBetsCount, wins, losses, pending, winRate, totalProfit: totalProfitVal, totalStake, roi, currentBankroll: currentBank };
+    const lostBetsCount = countLostBets();
+    const lostMoneySum = totalMoneyLostFromLosses();
+    const netChange = currentBank - startingBankroll; // net change (profit - withdrawals)
+
+    return {
+      totalBets: totalBetsCount, wins, losses, pending, winRate: winRateVal,
+      totalProfit: totalProfitVal, totalStake: totalStakeVal, roi,
+      currentBankroll: currentBank,
+      lostBetsCount, lostMoneySum, netChange
+    };
   }
 
   function updateUI() {
-    const stats = computeStats();
-    totalBetsSpan.textContent = stats.totalBets;
-    winRateSpan.textContent = (isNaN(stats.winRate) ? 0 : stats.winRate).toFixed(1) + '%';
-    totalProfitStat.textContent = stats.totalProfit.toFixed(2);
-    roiValue.textContent = stats.roi.toFixed(2) + '%';
-    currentBankrollSpan.textContent = stats.currentBankroll.toFixed(2);
-    totalPLSpan.textContent = stats.totalProfit.toFixed(2);
-    totalPLSpan.className = `bankroll-value ${stats.totalProfit >=0 ? 'profit-positive':'profit-negative'}`;
-    
+    const report = computeFullReport();
+    totalBetsSpan.textContent = report.totalBets;
+    winRateSpan.textContent = (isNaN(report.winRate) ? 0 : report.winRate).toFixed(1) + '%';
+    totalProfitStat.textContent = report.totalProfit.toFixed(2);
+    roiValue.textContent = report.roi.toFixed(2) + '%';
+    currentBankrollSpan.textContent = report.currentBankroll.toFixed(2);
+    totalPLSpan.textContent = report.totalProfit.toFixed(2);
+    totalPLSpan.className = `bankroll-value ${report.totalProfit >=0 ? 'profit-positive':'profit-negative'}`;
+
+    // Update reporting row
+    totalStakedReport.textContent = report.totalStake.toFixed(2);
+    totalLostBets.textContent = report.lostBetsCount;
+    moneyLostFromLosses.textContent = report.lostMoneySum.toFixed(2);
+    netBankrollChange.textContent = (report.netChange).toFixed(2);
+    netBankrollChange.style.color = report.netChange >= 0 ? '#10b981' : '#ef4444';
+
+    // Update sport filter
     const sports = [...new Set(bets.map(b => b.sport).filter(s => s))];
     filterSport.innerHTML = '<option value="">All Sports</option>';
     sports.forEach(s => { filterSport.innerHTML += `<option value="${s}">${s}</option>`; });
+    
     renderTable();
-    updateCharts(stats);
-    renderWithdrawalNotes(); // update withdrawal history display
+    updateCharts(report);
+    renderWithdrawalNotes();
   }
 
   function renderWithdrawalNotes() {
-    if (!withdrawalNotesList) return;
     if (withdrawals.length === 0) {
       withdrawalNotesList.innerHTML = '<div class="note-item" style="color:#94a3b8;">No withdrawals yet</div>';
       return;
@@ -648,28 +723,18 @@
     `).join('');
   }
 
-  // Withdraw function
   async function performWithdraw(amount, category, noteText) {
-    if (isNaN(amount) || amount <= 0) { alert("Enter a valid positive amount"); return false; }
+    if (isNaN(amount) || amount <= 0) { alert("Enter valid positive amount"); return false; }
     const currentBank = getEffectiveBankroll();
-    if (amount > currentBank) { alert(`Insufficient funds. Available bankroll: $${currentBank.toFixed(2)}`); return false; }
-    const withdrawalEntry = {
-      amount: amount,
-      category: category,
-      note: noteText || "",
-      date: new Date().toISOString(),
-      totalAfter: currentBank - amount
-    };
+    if (amount > currentBank) { alert(`Insufficient funds. Available: $${currentBank.toFixed(2)}`); return false; }
+    const withdrawalEntry = { amount, category, note: noteText || "", date: new Date().toISOString() };
     try {
-      // save withdrawal to Firestore "withdrawals" collection
       await db.collection('withdrawals').add(withdrawalEntry);
-      // reload withdrawals from firestore to keep sync
       await loadWithdrawals();
       updateUI();
       return true;
     } catch(e) {
       console.error(e);
-      alert("Error saving withdrawal, but we'll update locally");
       withdrawals.push(withdrawalEntry);
       updateUI();
       return true;
@@ -682,14 +747,9 @@
       withdrawals = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       renderWithdrawalNotes();
       updateUI();
-    } catch(e) {
-      console.warn("load withdrawals error", e);
-      withdrawals = withdrawals || [];
-      renderWithdrawalNotes();
-    }
+    } catch(e) { console.warn(e); }
   }
 
-  // Auto P/L
   function calcAutoPL() {
     const stake = parseFloat(stakeInp.value) || 0;
     const odds = parseFloat(oddsInp.value) || 0;
@@ -708,10 +768,10 @@
   function initCharts() {
     const ctx1 = document.getElementById('profitChart').getContext('2d');
     const ctx2 = document.getElementById('winLossPie').getContext('2d');
-    profitChart = new Chart(ctx1, { type: 'line', data: { labels: [], datasets: [{ label: 'Cumulative Profit', data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.3, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+    profitChart = new Chart(ctx1, { type: 'line', data: { labels: [], datasets: [{ label: 'Cumulative Profit', data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59,130,246,0.1)', tension: 0.3, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
     winLossChart = new Chart(ctx2, { type: 'doughnut', data: { labels: ['Win', 'Loss', 'Pending'], datasets: [{ data: [0,0,0], backgroundColor: ['#10b981', '#ef4444', '#facc15'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
   }
-  function updateCharts(stats) {
+  function updateCharts(report) {
     let cum = 0;
     const sorted = [...bets].sort((a,b) => new Date(a.date) - new Date(b.date));
     const labels = sorted.map(b => b.date);
@@ -719,7 +779,7 @@
     profitChart.data.labels = labels;
     profitChart.data.datasets[0].data = data;
     profitChart.update();
-    winLossChart.data.datasets[0].data = [stats.wins, stats.losses, stats.pending];
+    winLossChart.data.datasets[0].data = [report.wins, report.losses, report.pending];
     winLossChart.update();
   }
 
@@ -745,11 +805,11 @@
       html += `<tr><td>${bet.date}</td><td>${bet.sport || '—'}</td><td>${bet.match}</td><td>${bet.betType}</td><td>${bet.odds}</td><td>${bet.stake.toFixed(2)}</td><td><span class="badge ${bet.result.toLowerCase()}">${bet.result}</span></td><td class="${plClass}">${bet.profitLoss.toFixed(2)}</td><td>${canEdit ? `<i class="fas fa-edit action-icon" data-id="${bet.id}" title="Edit"></i>` : ''}<i class="fas fa-trash-alt action-icon" data-id="${bet.id}" title="Delete"></i></td></tr>`;
     });
     tableBody.innerHTML = html || '<tr><td colspan="9" style="padding:24px;text-align:center;">No bets logged.</td></tr>';
+    attachTableEvents();
+  }
+  function attachTableEvents() {
     document.querySelectorAll('.fa-trash-alt').forEach(icon => {
-      icon.addEventListener('click', async (e) => {
-        const id = e.target.dataset.id;
-        if (confirm('Delete this bet?')) { await db.collection('bets').doc(id).delete(); }
-      });
+      icon.addEventListener('click', async (e) => { const id = e.target.dataset.id; if (confirm('Delete bet?')) await db.collection('bets').doc(id).delete(); });
     });
     document.querySelectorAll('.fa-edit').forEach(icon => {
       icon.addEventListener('click', (e) => { const bet = bets.find(b => b.id === e.target.dataset.id); if(bet) loadBetForEditing(bet); });
@@ -788,28 +848,9 @@
   });
   searchInput.addEventListener('input', renderTable); filterSport.addEventListener('change', renderTable); filterResult.addEventListener('change', renderTable);
   document.querySelectorAll('th[data-sort]').forEach(th => { th.addEventListener('click', () => { const field = th.dataset.sort; if (currentSort.field === field) currentSort.asc = !currentSort.asc; else { currentSort.field = field; currentSort.asc = false; } renderTable(); }); });
-  
-  withdrawBtn.addEventListener('click', async () => {
-    const amount = parseFloat(withdrawAmount.value);
-    const category = usageCategory.value;
-    const note = withdrawNote.value.trim();
-    if (await performWithdraw(amount, category, note)) {
-      withdrawAmount.value = '';
-      withdrawNote.value = '';
-      usageCategory.value = 'Personal withdrawal';
-    }
-  });
-  clearNotesHistory.addEventListener('click', async () => {
-    if (confirm('Delete all withdrawal records? This will affect bankroll calculation.')) {
-      const batch = db.batch();
-      const snap = await db.collection('withdrawals').get();
-      snap.forEach(doc => batch.delete(doc.ref));
-      await batch.commit();
-      await loadWithdrawals();
-      updateUI();
-    }
-  });
-  
+  withdrawBtn.addEventListener('click', async () => { const amount = parseFloat(withdrawAmount.value); const category = usageCategory.value; const note = withdrawNote.value.trim(); if (await performWithdraw(amount, category, note)) { withdrawAmount.value = ''; withdrawNote.value = ''; usageCategory.value = 'Personal withdrawal'; } });
+  clearNotesHistory.addEventListener('click', async () => { if (confirm('Delete ALL withdrawal records? This will affect bankroll calculations.')) { const snap = await db.collection('withdrawals').get(); const batch = db.batch(); snap.forEach(doc => batch.delete(doc.ref)); await batch.commit(); await loadWithdrawals(); updateUI(); } });
+
   initCharts();
   listenToBets();
   loadBankroll();
