@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pro Bet Admin • Dashboard</title>
+  <title>Pro Bet Admin • Dashboard • Withdrawals & Notes</title>
   <!-- Font & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -37,6 +37,8 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 28px;
+      flex-wrap: wrap;
+      gap: 15px;
     }
     .header h1 {
       font-weight: 600;
@@ -186,6 +188,75 @@
     .btn-primary:hover {
       background: #1e293b;
     }
+    .btn-outline {
+      background: transparent;
+      border: 1.5px solid #cbd5e1;
+      color: #1e293b;
+    }
+    .btn-outline:hover {
+      background: #f1f5f9;
+    }
+
+    /* Withdrawal Section */
+    .withdraw-section {
+      background: #fff;
+      border-radius: 20px;
+      border: 1px solid #eef2f6;
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
+    .withdraw-flex {
+      display: flex;
+      gap: 14px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+    .withdraw-group {
+      flex: 1;
+      min-width: 140px;
+    }
+    .withdraw-group label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #475569;
+    }
+    .withdraw-group input, .withdraw-group select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1.5px solid #e2e8f0;
+    }
+    .btn-withdraw {
+      background: #ef4444;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-withdraw:hover {
+      background: #dc2626;
+    }
+    .note-history {
+      margin-top: 12px;
+      background: #f8fafc;
+      border-radius: 16px;
+      padding: 12px;
+      max-height: 140px;
+      overflow-y: auto;
+    }
+    .note-item {
+      font-size: 0.8rem;
+      padding: 6px 0;
+      border-bottom: 1px dashed #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .note-amount {
+      font-weight: 700;
+      color: #dc2626;
+    }
 
     /* Charts panel */
     .chart-panel {
@@ -227,10 +298,12 @@
       align-items: center;
       margin-bottom: 18px;
       flex-wrap: wrap;
+      gap: 12px;
     }
     .filter-bar {
       display: flex;
       gap: 12px;
+      flex-wrap: wrap;
     }
     .search-input {
       padding: 8px 16px;
@@ -284,13 +357,6 @@
       color: #ef4444;
     }
 
-    .starting-br-input {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
     .edit-mode-indicator {
       background: #fef3c7;
       color: #92400e;
@@ -321,7 +387,7 @@
 <div class="dashboard">
   <!-- HEADER -->
   <div class="header">
-    <h1><i class="fas fa-chart-pie" style="margin-right: 12px; color: #3b82f6;"></i>IahJhe BetVault</h1>
+    <h1><i class="fas fa-chart-pie" style="margin-right: 12px; color: #3b82f6;"></i>BetVault Admin</h1>
     <div class="bankroll-card">
       <div class="bankroll-item">
         <span class="bankroll-label"><i class="fas fa-coins"></i> Current</span>
@@ -357,40 +423,74 @@
 
   <!-- TWO COLUMN: FORM + CHARTS -->
   <div class="two-col">
-    <!-- BET LOGGING -->
-    <div class="form-panel">
-      <h2><i class="fas fa-pencil-alt"></i> <span id="formTitle">Log New Bet</span></h2>
-      <div id="editModeIndicator" class="edit-mode-indicator">
-        <span><i class="fas fa-edit"></i> Editing bet <span id="editingBetId"></span></span>
-        <button onclick="cancelEdit()" style="background:none;border:none;color:#92400e;cursor:pointer;font-weight:bold;">Cancel</button>
-      </div>
-      <div class="starting-br-input">
-        <label style="font-weight:500;">🏦 Starting Bankroll</label>
-        <input type="number" step="0.01" id="startingBankrollInput" class="form-control" style="width:140px;" placeholder="1000">
-        <button id="setBankrollBtn" class="btn-primary" style="width:auto; padding:8px 16px; margin:0;">Set</button>
-      </div>
-      <div class="form-grid">
-        <div class="form-group"><label>Date</label><input type="date" id="betDate" class="form-control" required></div>
-        <div class="form-group"><label>Sport</label><input type="text" id="sport" class="form-control" placeholder="e.g. Football"></div>
-        <div class="form-group full-width"><label>Match</label><input type="text" id="match" class="form-control" placeholder="Team A vs Team B"></div>
-        <div class="form-group"><label>Bet Type</label>
-          <select id="betType" class="form-control">
-            <option>Moneyline</option><option>Over/Under</option><option>Spread</option><option>Parlay</option><option>Prop</option>
-          </select>
+    <!-- BET LOGGING + WITHDRAWAL SECTION -->
+    <div>
+      <div class="form-panel">
+        <h2><i class="fas fa-pencil-alt"></i> <span id="formTitle">Log New Bet</span></h2>
+        <div id="editModeIndicator" class="edit-mode-indicator">
+          <span><i class="fas fa-edit"></i> Editing bet <span id="editingBetId"></span></span>
+          <button onclick="cancelEdit()" style="background:none;border:none;color:#92400e;cursor:pointer;font-weight:bold;">Cancel</button>
         </div>
-        <div class="form-group"><label>Odds (decimal)</label><input type="number" step="0.01" id="odds" class="form-control" value="2.00"></div>
-        <div class="form-group"><label>Stake</label><input type="number" step="0.01" id="stake" class="form-control" value="10.00"></div>
-        <div class="form-group"><label>Result</label>
-          <select id="result" class="form-control">
-            <option value="Win">Win</option><option value="Loss">Loss</option><option value="Pending" selected>Pending</option>
-          </select>
+        <div class="starting-br-input" style="display: flex; gap: 12px; align-items: center; margin-bottom: 20px;">
+          <label style="font-weight:500;">🏦 Starting Bankroll</label>
+          <input type="number" step="0.01" id="startingBankrollInput" class="form-control" style="width:140px;" placeholder="1000">
+          <button id="setBankrollBtn" class="btn-primary" style="width:auto; padding:8px 16px; margin:0;">Set</button>
+        </div>
+        <div class="form-grid">
+          <div class="form-group"><label>Date</label><input type="date" id="betDate" class="form-control" required></div>
+          <div class="form-group"><label>Sport</label><input type="text" id="sport" class="form-control" placeholder="e.g. Football"></div>
+          <div class="form-group full-width"><label>Match</label><input type="text" id="match" class="form-control" placeholder="Team A vs Team B"></div>
+          <div class="form-group"><label>Bet Type</label>
+            <select id="betType" class="form-control"><option>Moneyline</option><option>Over/Under</option><option>Spread</option><option>Parlay</option><option>Prop</option></select>
+          </div>
+          <div class="form-group"><label>Odds (decimal)</label><input type="number" step="0.01" id="odds" class="form-control" value="2.00"></div>
+          <div class="form-group"><label>Stake</label><input type="number" step="0.01" id="stake" class="form-control" value="10.00"></div>
+          <div class="form-group"><label>Result</label>
+            <select id="result" class="form-control"><option value="Win">Win</option><option value="Loss">Loss</option><option value="Pending" selected>Pending</option></select>
+          </div>
+        </div>
+        <div class="auto-row">
+          <span class="auto-label">🧮 Auto P/L:</span>
+          <span class="profit-display" id="autoPL">0.00</span>
+        </div>
+        <button class="btn-primary" id="logBetBtn"><i class="fas fa-save"></i> <span id="submitBtnText">Log Bet & Update</span></button>
+      </div>
+
+      <!-- NEW: WITHDRAWAL & NOTES SECTION -->
+      <div class="withdraw-section" style="margin-top: 16px;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 12px;"><i class="fas fa-hand-holding-usd"></i> Withdraw Funds & Usage Note</h3>
+        <div class="withdraw-flex">
+          <div class="withdraw-group">
+            <label>💰 Withdraw Amount</label>
+            <input type="number" step="0.01" id="withdrawAmount" placeholder="0.00" class="form-control">
+          </div>
+          <div class="withdraw-group">
+            <label>📝 Where is money used?</label>
+            <select id="usageCategory" class="form-control">
+              <option value="Personal withdrawal">Personal withdrawal</option>
+              <option value="New bankroll top-up">New bankroll top-up</option>
+              <option value="Expenses / fees">Expenses / fees</option>
+              <option value="Reinvested elsewhere">Reinvested elsewhere</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="withdraw-group">
+            <label>📌 Note (optional)</label>
+            <input type="text" id="withdrawNote" placeholder="Extra details..." class="form-control">
+          </div>
+          <button id="withdrawBtn" class="btn-withdraw"><i class="fas fa-arrow-down"></i> Withdraw</button>
+        </div>
+        <!-- Recent withdrawal notes history -->
+        <div style="margin-top: 14px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <span style="font-weight: 600; font-size: 0.8rem;">📋 Recent withdrawal notes</span>
+            <button id="clearNotesHistory" style="background:none; border:none; color:#94a3b8; font-size:0.7rem; cursor:pointer;">clear all</button>
+          </div>
+          <div id="withdrawalNotesList" class="note-history">
+            <div class="note-item" style="color:#94a3b8;">No withdrawals yet</div>
+          </div>
         </div>
       </div>
-      <div class="auto-row">
-        <span class="auto-label">🧮 Auto P/L:</span>
-        <span class="profit-display" id="autoPL">0.00</span>
-      </div>
-      <button class="btn-primary" id="logBetBtn"><i class="fas fa-save"></i> <span id="submitBtnText">Log Bet & Update</span></button>
     </div>
 
     <!-- CHARTS -->
@@ -414,37 +514,23 @@
       <h2 style="font-size:1.4rem;"><i class="fas fa-list-ul"></i> Bet History</h2>
       <div class="filter-bar">
         <input type="text" id="searchInput" class="search-input" placeholder="🔍 Search match...">
-        <select id="filterSport">
-          <option value="">All Sports</option>
-        </select>
-        <select id="filterResult">
-          <option value="">All Results</option>
-          <option value="Win">Win</option><option value="Loss">Loss</option><option value="Pending">Pending</option>
-        </select>
+        <select id="filterSport"><option value="">All Sports</option></select>
+        <select id="filterResult"><option value="">All Results</option><option value="Win">Win</option><option value="Loss">Loss</option><option value="Pending">Pending</option></select>
       </div>
     </div>
     <div style="overflow-x:auto;">
       <table id="betsTable">
-        <thead>
-          <tr>
-            <th data-sort="date">Date <i class="fas fa-sort"></i></th>
-            <th>Sport</th><th>Match</th><th>Type</th><th>Odds</th><th>Stake</th>
-            <th>Result</th><th>P/L</th><th>Actions</th>
-          </tr>
-        </thead>
+        <thead><tr><th data-sort="date">Date <i class="fas fa-sort"></i></th><th>Sport</th><th>Match</th><th>Type</th><th>Odds</th><th>Stake</th><th>Result</th><th>P/L</th><th>Actions</th></tr></thead>
         <tbody id="tableBody"></tbody>
       </table>
     </div>
   </div>
 </div>
 
-<!-- Connection Status -->
-<div class="connection-status" id="connectionStatus">
-  <i class="fas fa-circle"></i> <span id="connectionText">Initializing...</span>
-</div>
+<div class="connection-status" id="connectionStatus"><i class="fas fa-circle"></i> <span>Online</span></div>
 
 <script>
-  // Firebase configuration
+  // Firebase config
   const firebaseConfig = {
     apiKey: "AIzaSyAWLMR5FrnKVGkJ3OGhYOHlPZPAx5liACU",
     authDomain: "iahjhe-betracker.firebaseapp.com",
@@ -454,48 +540,15 @@
     appId: "1:352424699506:web:d30a020702785c22b5c4eb",
     measurementId: "G-CGF3SMF60V"
   };
-
-  // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
+  db.settings({ cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED });
+  db.enablePersistence().catch(()=>console.log("persistence limited"));
 
-  // Enable offline persistence with updated settings
-  db.settings({
-    cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED
-  });
-
-  db.enablePersistence()
-    .then(() => {
-      console.log("Offline persistence enabled");
-      connectionText.textContent = 'Connected (Offline Ready)';
-    })
-    .catch((err) => {
-      if (err.code === 'failed-precondition') {
-        console.log("Multiple tabs open, persistence can only be enabled in one tab at a time.");
-      } else if (err.code === 'unimplemented') {
-        console.log("Browser doesn't support persistence");
-      }
-    });
-
-  // Simple connection monitoring using window events
-  window.addEventListener('online', () => {
-    connectionStatus.innerHTML = '<i class="fas fa-circle status-online"></i> <span>Online</span>';
-  });
-  
-  window.addEventListener('offline', () => {
-    connectionStatus.innerHTML = '<i class="fas fa-circle status-offline"></i> <span>Offline (saving locally)</span>';
-  });
-  
-  // Initial connection state
-  if (navigator.onLine) {
-    connectionStatus.innerHTML = '<i class="fas fa-circle status-online"></i> <span>Online</span>';
-  } else {
-    connectionStatus.innerHTML = '<i class="fas fa-circle status-offline"></i> <span>Offline (saving locally)</span>';
-  }
-
-  // ---------- GLOBAL STATE ----------
+  // GLOBAL STATE
   let bets = [];
   let startingBankroll = 1000.00;
+  let withdrawals = []; // array of {amount, category, note, date, totalAfter}
   let currentSort = { field: 'date', asc: false };
   let editingBetId = null;
 
@@ -524,41 +577,43 @@
   const submitBtnText = document.getElementById('submitBtnText');
   const editModeIndicator = document.getElementById('editModeIndicator');
   const editingBetIdSpan = document.getElementById('editingBetId');
+  const withdrawAmount = document.getElementById('withdrawAmount');
+  const usageCategory = document.getElementById('usageCategory');
+  const withdrawNote = document.getElementById('withdrawNote');
+  const withdrawBtn = document.getElementById('withdrawBtn');
+  const withdrawalNotesList = document.getElementById('withdrawalNotesList');
+  const clearNotesHistory = document.getElementById('clearNotesHistory');
 
-  // Set today as default date
   const today = new Date().toISOString().split('T')[0];
   betDate.value = today;
   startingBankrollInput.value = startingBankroll;
 
-  // ---------- AUTO CALC P/L ----------
-  function calcAutoPL() {
-    const stake = parseFloat(stakeInp.value) || 0;
-    const odds = parseFloat(oddsInp.value) || 0;
-    const result = resultSelect.value;
-    let pl = 0;
-    if (result === 'Win') pl = stake * (odds - 1);
-    else if (result === 'Loss') pl = -stake;
-    else pl = 0;
-    autoPLSpan.textContent = pl.toFixed(2);
-    autoPLSpan.style.color = pl >= 0 ? '#10b981' : '#ef4444';
-    return pl;
+  // Helper: compute total profit from bets
+  function totalProfitFromBets() {
+    return bets.reduce((sum, b) => sum + (b.profitLoss || 0), 0);
   }
-  [stakeInp, oddsInp, resultSelect].forEach(el => el.addEventListener('input', calcAutoPL));
-  calcAutoPL();
 
-  // ---------- AGGREGATE STATS ----------
+  // total withdrawn sum
+  function totalWithdrawnAmount() {
+    return withdrawals.reduce((sum, w) => sum + w.amount, 0);
+  }
+
+  // effective net bankroll = startingBankroll + totalProfitFromBets() - totalWithdrawn
+  function getEffectiveBankroll() {
+    return startingBankroll + totalProfitFromBets() - totalWithdrawnAmount();
+  }
+
   function computeStats() {
-    const totalBets = bets.length;
+    const totalBetsCount = bets.length;
     const wins = bets.filter(b => b.result === 'Win').length;
     const losses = bets.filter(b => b.result === 'Loss').length;
     const pending = bets.filter(b => b.result === 'Pending').length;
-    const winRate = totalBets > 0 ? ((wins / (wins+losses)) * 100) : 0;
-    const totalProfit = bets.reduce((sum, b) => sum + (b.profitLoss || 0), 0);
+    const winRate = (wins + losses) > 0 ? (wins / (wins + losses)) * 100 : 0;
+    const totalProfitVal = totalProfitFromBets();
     const totalStake = bets.reduce((sum, b) => sum + (b.stake || 0), 0);
-    const roi = totalStake > 0 ? (totalProfit / totalStake) * 100 : 0;
-    const currentBankroll = startingBankroll + totalProfit;
-
-    return { totalBets, wins, losses, pending, winRate, totalProfit, totalStake, roi, currentBankroll };
+    const roi = totalStake > 0 ? (totalProfitVal / totalStake) * 100 : 0;
+    const currentBank = getEffectiveBankroll();
+    return { totalBets: totalBetsCount, wins, losses, pending, winRate, totalProfit: totalProfitVal, totalStake, roi, currentBankroll: currentBank };
   }
 
   function updateUI() {
@@ -571,296 +626,194 @@
     totalPLSpan.textContent = stats.totalProfit.toFixed(2);
     totalPLSpan.className = `bankroll-value ${stats.totalProfit >=0 ? 'profit-positive':'profit-negative'}`;
     
-    // Update sport filter dropdown
     const sports = [...new Set(bets.map(b => b.sport).filter(s => s))];
     filterSport.innerHTML = '<option value="">All Sports</option>';
     sports.forEach(s => { filterSport.innerHTML += `<option value="${s}">${s}</option>`; });
-    
     renderTable();
     updateCharts(stats);
+    renderWithdrawalNotes(); // update withdrawal history display
   }
 
-  // ---------- CHARTS ----------
+  function renderWithdrawalNotes() {
+    if (!withdrawalNotesList) return;
+    if (withdrawals.length === 0) {
+      withdrawalNotesList.innerHTML = '<div class="note-item" style="color:#94a3b8;">No withdrawals yet</div>';
+      return;
+    }
+    withdrawalNotesList.innerHTML = withdrawals.slice().reverse().map(w => `
+      <div class="note-item">
+        <span><i class="fas fa-receipt"></i> ${new Date(w.date).toLocaleDateString()} - <strong>${w.category}</strong> ${w.note ? `(${w.note})` : ''}</span>
+        <span class="note-amount">-$${w.amount.toFixed(2)}</span>
+      </div>
+    `).join('');
+  }
+
+  // Withdraw function
+  async function performWithdraw(amount, category, noteText) {
+    if (isNaN(amount) || amount <= 0) { alert("Enter a valid positive amount"); return false; }
+    const currentBank = getEffectiveBankroll();
+    if (amount > currentBank) { alert(`Insufficient funds. Available bankroll: $${currentBank.toFixed(2)}`); return false; }
+    const withdrawalEntry = {
+      amount: amount,
+      category: category,
+      note: noteText || "",
+      date: new Date().toISOString(),
+      totalAfter: currentBank - amount
+    };
+    try {
+      // save withdrawal to Firestore "withdrawals" collection
+      await db.collection('withdrawals').add(withdrawalEntry);
+      // reload withdrawals from firestore to keep sync
+      await loadWithdrawals();
+      updateUI();
+      return true;
+    } catch(e) {
+      console.error(e);
+      alert("Error saving withdrawal, but we'll update locally");
+      withdrawals.push(withdrawalEntry);
+      updateUI();
+      return true;
+    }
+  }
+
+  async function loadWithdrawals() {
+    try {
+      const snap = await db.collection('withdrawals').orderBy('date', 'desc').get();
+      withdrawals = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderWithdrawalNotes();
+      updateUI();
+    } catch(e) {
+      console.warn("load withdrawals error", e);
+      withdrawals = withdrawals || [];
+      renderWithdrawalNotes();
+    }
+  }
+
+  // Auto P/L
+  function calcAutoPL() {
+    const stake = parseFloat(stakeInp.value) || 0;
+    const odds = parseFloat(oddsInp.value) || 0;
+    const result = resultSelect.value;
+    let pl = 0;
+    if (result === 'Win') pl = stake * (odds - 1);
+    else if (result === 'Loss') pl = -stake;
+    autoPLSpan.textContent = pl.toFixed(2);
+    autoPLSpan.style.color = pl >= 0 ? '#10b981' : '#ef4444';
+    return pl;
+  }
+  [stakeInp, oddsInp, resultSelect].forEach(el => el.addEventListener('input', calcAutoPL));
+  calcAutoPL();
+
   let profitChart, winLossChart;
   function initCharts() {
     const ctx1 = document.getElementById('profitChart').getContext('2d');
     const ctx2 = document.getElementById('winLossPie').getContext('2d');
-    
-    profitChart = new Chart(ctx1, { 
-      type: 'line', 
-      data: { 
-        labels: [], 
-        datasets: [{
-          label: 'Cumulative Profit',
-          data: [],
-          borderColor: '#3b82f6',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          tension: 0.3,
-          fill: true
-        }] 
-      }, 
-      options: { 
-        responsive: true, 
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false }
-        }
-      } 
-    });
-    
-    winLossChart = new Chart(ctx2, { 
-      type: 'doughnut', 
-      data: { 
-        labels: ['Win', 'Loss', 'Pending'], 
-        datasets: [{
-          data: [0,0,0],
-          backgroundColor: ['#10b981', '#ef4444', '#facc15'],
-          borderWidth: 0
-        }] 
-      }, 
-      options: { 
-        responsive: true, 
-        maintainAspectRatio: false,
-        plugins: { 
-          legend: { position: 'bottom' } 
-        } 
-      } 
-    });
+    profitChart = new Chart(ctx1, { type: 'line', data: { labels: [], datasets: [{ label: 'Cumulative Profit', data: [], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', tension: 0.3, fill: true }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+    winLossChart = new Chart(ctx2, { type: 'doughnut', data: { labels: ['Win', 'Loss', 'Pending'], datasets: [{ data: [0,0,0], backgroundColor: ['#10b981', '#ef4444', '#facc15'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
   }
-
   function updateCharts(stats) {
-    // Profit over time: cumulative profit
     let cum = 0;
     const sorted = [...bets].sort((a,b) => new Date(a.date) - new Date(b.date));
     const labels = sorted.map(b => b.date);
     const data = sorted.map(b => { cum += (b.profitLoss||0); return cum; });
-    
     profitChart.data.labels = labels;
     profitChart.data.datasets[0].data = data;
     profitChart.update();
-    
     winLossChart.data.datasets[0].data = [stats.wins, stats.losses, stats.pending];
     winLossChart.update();
   }
 
-  // ---------- RENDER TABLE ----------
   function renderTable() {
     let filtered = [...bets];
     const searchTerm = searchInput.value.toLowerCase();
     const sportFilter = filterSport.value;
     const resultFilter = filterResult.value;
-    
     if (searchTerm) filtered = filtered.filter(b => b.match.toLowerCase().includes(searchTerm));
     if (sportFilter) filtered = filtered.filter(b => b.sport === sportFilter);
     if (resultFilter) filtered = filtered.filter(b => b.result === resultFilter);
-    
-    // Sort
     filtered.sort((a,b) => {
-      let valA = a[currentSort.field]; 
-      let valB = b[currentSort.field];
-      if (currentSort.field === 'date') { 
-        valA = new Date(a.date); 
-        valB = new Date(b.date); 
-      }
+      let valA = a[currentSort.field], valB = b[currentSort.field];
+      if (currentSort.field === 'date') { valA = new Date(a.date); valB = new Date(b.date); }
       if (valA < valB) return currentSort.asc ? -1 : 1;
       if (valA > valB) return currentSort.asc ? 1 : -1;
       return 0;
     });
-    
     let html = '';
     filtered.forEach(bet => {
       const plClass = bet.profitLoss >=0 ? 'profit-positive' : 'profit-negative';
       const canEdit = bet.result === 'Pending';
-      
-      html += `<tr>
-        <td>${bet.date}</td>
-        <td>${bet.sport || '—'}</td>
-        <td>${bet.match}</td>
-        <td>${bet.betType}</td>
-        <td>${bet.odds}</td>
-        <td>${bet.stake.toFixed(2)}</td>
-        <td><span class="badge ${bet.result.toLowerCase()}">${bet.result}</span></td>
-        <td class="${plClass}">${bet.profitLoss.toFixed(2)}</td>
-        <td>
-          ${canEdit ? `<i class="fas fa-edit action-icon" data-id="${bet.id}" title="Edit"></i>` : ''}
-          <i class="fas fa-trash-alt action-icon" data-id="${bet.id}" title="Delete"></i>
-        </td>
-      </tr>`;
+      html += `<tr><td>${bet.date}</td><td>${bet.sport || '—'}</td><td>${bet.match}</td><td>${bet.betType}</td><td>${bet.odds}</td><td>${bet.stake.toFixed(2)}</td><td><span class="badge ${bet.result.toLowerCase()}">${bet.result}</span></td><td class="${plClass}">${bet.profitLoss.toFixed(2)}</td><td>${canEdit ? `<i class="fas fa-edit action-icon" data-id="${bet.id}" title="Edit"></i>` : ''}<i class="fas fa-trash-alt action-icon" data-id="${bet.id}" title="Delete"></i></td></tr>`;
     });
-    
     tableBody.innerHTML = html || '<tr><td colspan="9" style="padding:24px;text-align:center;">No bets logged.</td></tr>';
-    
-    // Delete handler
     document.querySelectorAll('.fa-trash-alt').forEach(icon => {
       icon.addEventListener('click', async (e) => {
         const id = e.target.dataset.id;
-        if (confirm('Delete this bet?')) {
-          try {
-            await db.collection('bets').doc(id).delete();
-          } catch (error) {
-            console.error("Delete error:", error);
-            // Fallback: remove from local array
-            bets = bets.filter(b => b.id !== id);
-            updateUI();
-          }
-        }
+        if (confirm('Delete this bet?')) { await db.collection('bets').doc(id).delete(); }
       });
     });
-    
-    // Edit handler
     document.querySelectorAll('.fa-edit').forEach(icon => {
-      icon.addEventListener('click', (e) => {
-        const id = e.target.dataset.id;
-        const bet = bets.find(b => b.id === id);
-        if (bet) loadBetForEditing(bet);
-      });
+      icon.addEventListener('click', (e) => { const bet = bets.find(b => b.id === e.target.dataset.id); if(bet) loadBetForEditing(bet); });
     });
   }
-
-  // ---------- EDIT FUNCTIONALITY ----------
   function loadBetForEditing(bet) {
-    editingBetId = bet.id;
-    betDate.value = bet.date;
-    sportInp.value = bet.sport || '';
-    matchInp.value = bet.match;
-    betType.value = bet.betType;
-    oddsInp.value = bet.odds;
-    stakeInp.value = bet.stake;
-    resultSelect.value = bet.result;
-    
-    formTitle.textContent = 'Edit Bet';
-    submitBtnText.textContent = 'Update Bet';
-    editModeIndicator.style.display = 'flex';
-    editingBetIdSpan.textContent = bet.id.slice(0, 8) + '...';
-    
-    calcAutoPL();
-    
-    // Scroll to form
+    editingBetId = bet.id; betDate.value = bet.date; sportInp.value = bet.sport || ''; matchInp.value = bet.match; betType.value = bet.betType; oddsInp.value = bet.odds; stakeInp.value = bet.stake; resultSelect.value = bet.result;
+    formTitle.textContent = 'Edit Bet'; submitBtnText.textContent = 'Update Bet'; editModeIndicator.style.display = 'flex'; editingBetIdSpan.textContent = bet.id.slice(0,8)+'...'; calcAutoPL();
     document.querySelector('.form-panel').scrollIntoView({ behavior: 'smooth' });
   }
-
   window.cancelEdit = function() {
-    editingBetId = null;
-    formTitle.textContent = 'Log New Bet';
-    submitBtnText.textContent = 'Log Bet & Update';
-    editModeIndicator.style.display = 'none';
-    
-    // Reset form
-    betDate.value = today;
-    sportInp.value = '';
-    matchInp.value = '';
-    betType.value = 'Moneyline';
-    oddsInp.value = '2.00';
-    stakeInp.value = '10.00';
-    resultSelect.value = 'Pending';
-    calcAutoPL();
+    editingBetId = null; formTitle.textContent = 'Log New Bet'; submitBtnText.textContent = 'Log Bet & Update'; editModeIndicator.style.display = 'none';
+    betDate.value = today; sportInp.value = ''; matchInp.value = ''; betType.value = 'Moneyline'; oddsInp.value = '2.00'; stakeInp.value = '10.00'; resultSelect.value = 'Pending'; calcAutoPL();
   };
-
-  // ---------- FIRESTORE SYNC ----------
   function listenToBets() {
     db.collection('bets').orderBy('date', 'desc').onSnapshot(snapshot => {
-      bets = snapshot.docs.map(doc => ({ 
-        id: doc.id, 
-        ...doc.data(),
-        profitLoss: Number(doc.data().profitLoss) || 0,
-        stake: Number(doc.data().stake) || 0,
-        odds: Number(doc.data().odds) || 0
-      }));
+      bets = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data(), profitLoss: Number(doc.data().profitLoss) || 0, stake: Number(doc.data().stake) || 0, odds: Number(doc.data().odds) || 0 }));
       updateUI();
-    }, error => {
-      console.error("Snapshot error:", error);
-      connectionText.textContent = 'Error loading data';
     });
   }
-
   async function loadBankroll() {
-    try {
-      const doc = await db.collection('settings').doc('bankroll').get();
-      if (doc.exists) {
-        startingBankroll = doc.data().value || 1000;
-        startingBankrollInput.value = startingBankroll;
-      }
-    } catch (error) {
-      console.error("Load bankroll error:", error);
-    }
+    const doc = await db.collection('settings').doc('bankroll').get();
+    if (doc.exists) { startingBankroll = doc.data().value || 1000; startingBankrollInput.value = startingBankroll; }
     updateUI();
   }
+  async function saveBankroll(val) { await db.collection('settings').doc('bankroll').set({ value: val }); }
 
-  async function saveBankroll(val) {
-    try {
-      await db.collection('settings').doc('bankroll').set({ value: val });
-    } catch (error) {
-      console.error("Save bankroll error:", error);
+  setBankrollBtn.addEventListener('click', async () => { const val = parseFloat(startingBankrollInput.value); if (!isNaN(val) && val >= 0) { startingBankroll = val; await saveBankroll(val); updateUI(); } });
+  document.getElementById('logBetBtn').addEventListener('click', async () => {
+    const date = betDate.value, sport = sportInp.value.trim(), match = matchInp.value.trim();
+    if (!date || !match) { alert('Date and Match required'); return; }
+    const odds = parseFloat(oddsInp.value)||0, stake = parseFloat(stakeInp.value)||0, result = resultSelect.value, betTypeVal = betType.value, profitLoss = calcAutoPL();
+    const betData = { date, sport, match, betType: betTypeVal, odds, stake, result, profitLoss, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+    if (editingBetId) { await db.collection('bets').doc(editingBetId).update(betData); cancelEdit(); }
+    else { betData.createdAt = firebase.firestore.FieldValue.serverTimestamp(); await db.collection('bets').add(betData); sportInp.value=''; matchInp.value=''; oddsInp.value='2.00'; stakeInp.value='10.00'; resultSelect.value='Pending'; calcAutoPL(); }
+  });
+  searchInput.addEventListener('input', renderTable); filterSport.addEventListener('change', renderTable); filterResult.addEventListener('change', renderTable);
+  document.querySelectorAll('th[data-sort]').forEach(th => { th.addEventListener('click', () => { const field = th.dataset.sort; if (currentSort.field === field) currentSort.asc = !currentSort.asc; else { currentSort.field = field; currentSort.asc = false; } renderTable(); }); });
+  
+  withdrawBtn.addEventListener('click', async () => {
+    const amount = parseFloat(withdrawAmount.value);
+    const category = usageCategory.value;
+    const note = withdrawNote.value.trim();
+    if (await performWithdraw(amount, category, note)) {
+      withdrawAmount.value = '';
+      withdrawNote.value = '';
+      usageCategory.value = 'Personal withdrawal';
     }
-  }
-
-  // ---------- EVENT LISTENERS ----------
-  setBankrollBtn.addEventListener('click', async () => {
-    const val = parseFloat(startingBankrollInput.value);
-    if (!isNaN(val) && val >= 0) {
-      startingBankroll = val;
-      await saveBankroll(val);
+  });
+  clearNotesHistory.addEventListener('click', async () => {
+    if (confirm('Delete all withdrawal records? This will affect bankroll calculation.')) {
+      const batch = db.batch();
+      const snap = await db.collection('withdrawals').get();
+      snap.forEach(doc => batch.delete(doc.ref));
+      await batch.commit();
+      await loadWithdrawals();
       updateUI();
     }
   });
-
-  document.getElementById('logBetBtn').addEventListener('click', async () => {
-    const date = betDate.value;
-    const sport = sportInp.value.trim();
-    const match = matchInp.value.trim();
-    if (!date || !match) { alert('Date and Match required'); return; }
-    
-    const odds = parseFloat(oddsInp.value) || 0;
-    const stake = parseFloat(stakeInp.value) || 0;
-    const result = resultSelect.value;
-    const betTypeVal = betType.value;
-    const profitLoss = calcAutoPL();
-    
-    const betData = {
-      date, sport, match, betType: betTypeVal, odds, stake, result, profitLoss,
-      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-    };
-    
-    try {
-      if (editingBetId) {
-        await db.collection('bets').doc(editingBetId).update(betData);
-        cancelEdit();
-      } else {
-        betData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
-        await db.collection('bets').add(betData);
-        // Reset form
-        sportInp.value = ''; 
-        matchInp.value = ''; 
-        oddsInp.value = '2.00'; 
-        stakeInp.value = '10.00'; 
-        resultSelect.value = 'Pending';
-        calcAutoPL();
-      }
-    } catch (error) {
-      console.error("Save error:", error);
-      alert("Error saving bet. Please check your connection.");
-    }
-  });
-
-  // Filter & search
-  searchInput.addEventListener('input', renderTable);
-  filterSport.addEventListener('change', renderTable);
-  filterResult.addEventListener('change', renderTable);
   
-  // Sorting
-  document.querySelectorAll('th[data-sort]').forEach(th => {
-    th.addEventListener('click', () => {
-      const field = th.dataset.sort;
-      if (currentSort.field === field) currentSort.asc = !currentSort.asc;
-      else { currentSort.field = field; currentSort.asc = false; }
-      renderTable();
-    });
-  });
-
-  // Initialize
   initCharts();
   listenToBets();
   loadBankroll();
+  loadWithdrawals();
 </script>
 </body>
 </html>
